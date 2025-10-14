@@ -5,6 +5,10 @@ import os
 
 import pandas as pd
 
+import project_logger
+
+logger = project_logger.create_logger('preprocess_data')
+
 def get_sample_name(fname):
     """Extract sample name from file name"""
     base = os.path.basename(fname)
@@ -14,6 +18,7 @@ def get_sample_name(fname):
 def read_file(fname):
     """Read and preprocess BED file"""
     samp = get_sample_name(fname)
+    logger.info(f'Processing BED file for sample: {samp}')
 
     df = pd.read_csv(
         fname,
@@ -35,6 +40,8 @@ def read_file(fname):
 
 def read_metadata(fname):
     """Read metadata TSV file"""
+    logger.info(f'Reading metadata file: {fname}')
+
     df = pd.read_csv(
         fname,
         sep='\t',
@@ -77,8 +84,11 @@ def process_files(dir, n_processes, meta_name):
     # Not the most efficient way to do this, but it gets the job done
     files = []
     for f in glob.glob(f'{dir}/*.gz'):
-        if get_sample_name(f) in list(meta['WGBS_ID']):
+        samp = get_sample_name(f)
+        if samp in list(meta['WGBS_ID']):
             files.append(f)
+        else:
+            logger.info(f'Ignoring sample name not found in metadata sheet: {samp}')
 
     with Pool(processes=n_processes) as pool:
         dfs = pool.map(read_file, files)
@@ -93,6 +103,7 @@ def main(dir, n_processes, meta_name, oname):
     df = process_files(dir, n_processes, meta_name)
 
     if len(oname) > 0:
+        logger.info(f'Creating preprocessed data file: {oname}')
         df.to_csv(oname, sep='\t')
 
     return df
