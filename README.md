@@ -8,6 +8,7 @@ or through the `main.py` entrypoint. The following dependencies are needed to ru
 | Python     | 3.14    |
 | Pandas     | 2.3.3   |
 | Numpy      | 2.3.3   |
+| Matplotlib | 3.10.6  |
 
 To simplify the process of retrieving the dependencies, an `environment.yml` file has been provided for use with `conda`
 or similar package management systems (`mamba`, `pixi`, etc.). An example of setting up with `conda` is:
