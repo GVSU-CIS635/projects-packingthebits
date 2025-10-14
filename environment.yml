@@ -1,0 +1,8 @@
+name: packing_the_bits
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.14
+  - pandas=2.3.3
+  - numpy=2.3.3
