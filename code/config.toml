@@ -10,4 +10,4 @@ n_processes = 1
 # TSV file to save (and read) preprocessed data from
 # Saves time when rerunning pipeline
 # "" => will not read/write preprocessed file
-preprocessed_file = ""
+preprocessed_file = "example_data.tsv"

@@ -109,4 +109,4 @@ def main(dir, n_processes, meta_name, oname):
     return df
 
 if __name__ == '__main__':
-    main('../data', 1, '../data/metadata.tsv', '')
+    main('../data', 1, '../data/metadata.tsv', 'example_data.tsv')
