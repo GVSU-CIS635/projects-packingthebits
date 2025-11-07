@@ -6,6 +6,8 @@ import pandas as pd
 import project_logger
 import A_read_config as read_config
 import B_preprocess_data as preprocess_data
+import C_descriptive_stats as descriptive_stats
+import D_dissimilarity as dissimilarity
 
 logger = project_logger.create_logger('main')
 
@@ -32,10 +34,23 @@ def main():
     df = None
     if len(conf['preprocessed_file']) > 0 and os.path.exists(conf['preprocessed_file']):
         logger.info(f'Using existing preprocessed file: {conf["preprocessed_file"]}')
-        df = pd.read_csv(conf['preprocessed_file'], sep='\t', index_col=['chr', 'start'])
+        df = pd.read_csv(
+            conf['preprocessed_file'],
+            sep='\t',
+            index_col=['chr', 'start']
+        )
     else:
         logger.info('Cannot determine if data has been preprocessed - preprocessing now')
-        df = preprocess_data.main(conf['data_dir'], conf['n_processes'], conf['meta_file'], conf['preprocessed_file'])
+        df = preprocess_data.main(
+            conf['data_dir'],
+            conf['n_processes'],
+            conf['meta_file'],
+            conf['preprocessed_file']
+        )
+
+    # Do analysis and visualization portions of pipeline
+    descriptive_stats.main(df)
+    dissimilarity.main(df)
 
     print(df)
 
