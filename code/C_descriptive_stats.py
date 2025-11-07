@@ -18,8 +18,9 @@ def by_sample(df):
     plt.xlabel('')
     plt.ylabel('Methylation Level')
 
-    # TODO: Add xtick labels with sample names turned 90 degrees
-    # TODO: Fix y-axis ticks and range
+    plt.ylim(0, 1.05)
+
+    plt.xticks(ticks=range(1,len(df.columns)+1), labels=df.columns, rotation=90)
 
     plt.savefig('stats_by_sample.pdf', bbox_inches='tight')
     plt.close('all')
@@ -28,40 +29,45 @@ def by_sample(df):
 
 def by_cpg(df):
     """Create lineplot of statistics by CpG"""
-    # TODO: Rethink how I might want to show this. WAY too many points to plot
-    x = range(len(df))
     mean = df.mean(axis=1)
-    std = df.std(axis=1)
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(5, 5))
     plt.tight_layout()
 
-    ax.plot(x, mean, '-')
-    ax.fill_between(x, mean - std, mean + std, alpha=0.2)
+    ax.violinplot(mean, widths=0.1, showmeans=True, showmedians=True)
 
-    plt.title('Mean Methylation Level Across All CpGs')
+    plt.title('Mean Methylation Levels Across All CpGs')
     plt.xlabel('CpG')
     plt.ylabel('Methylation Level')
+
+    plt.xlim(0.8,1.2)
+    plt.ylim(0, 1.05)
+    plt.xticks([])
 
     plt.savefig('stats_by_cpg.pdf', bbox_inches='tight')
     plt.close('all')
 
     return None
 
-def main(fname):
+def main(df):
     """Calculate and plot descriptive statistics from preprocessed data"""
-    logger.info(f'Reading preprocessed data file: {fname}')
-    df = pd.read_csv(fname, sep='\t', index_col=['chr', 'start'])
+    logger.info('Restricting to only raw data for plotting')
+    df_raw = df[[col for col in df.columns if '_raw' in col]]
 
-    by_sample(df)
+    logger.info('Generating by-sample descriptive statistics plot')
+    by_sample(df_raw)
 
-    by_cpg(df)
+    logger.info('Generating by-CpG descriptive statistics plot')
+    by_cpg(df_raw)
 
     return None
 
 if __name__ == '__main__':
     fname = 'example_data.tsv'
+    logger.info(f'Reading preprocessed data file: {fname}')
+    df = pd.read_csv(fname, sep='\t', index_col=['chr', 'start'])
+
     if os.path.exists(fname):
-        main(fname)
+        main(df)
     else:
         logger.error('B_preprocess_data.py has not been run. Run and try again!')
