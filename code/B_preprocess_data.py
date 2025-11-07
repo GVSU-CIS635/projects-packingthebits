@@ -3,6 +3,8 @@ import gzip
 import glob
 import os
 
+from sklearn.preprocessing import StandardScaler
+from scipy.special import logit
 import pandas as pd
 
 import project_logger
@@ -14,6 +16,22 @@ def get_sample_name(fname):
     base = os.path.basename(fname)
     return base.replace('_mergecg.bed.gz', '')
 
+def beta_to_m_value(betas, covgs, k):
+    """Turn CpG beta value into M-value using logit transform"""
+    b = list(betas)
+    c = list(covgs)
+
+    s = []
+    for i in range(len(c)):
+        m = round(c[i] * b[i])
+        u = (c[i] - m)
+
+        # k eliminates values of 0 and 1 to avoid infinite return values
+        s.append((m+k) / ((m+k) + (u+k)))
+
+    out = logit(s)
+
+    return pd.Series(out)
 
 def read_file(fname):
     """Read and preprocess BED file"""
@@ -23,9 +41,10 @@ def read_file(fname):
     df = pd.read_csv(
         fname,
         sep='\t',
-        names=['chr', 'start', 'end', f'{samp}', 'covg', 'context'],
-        usecols=['chr', 'start', f'{samp}', 'covg']
+        names=['chr', 'start', 'end', f'{samp}_raw', 'covg', 'context'],
+        usecols=['chr', 'start', f'{samp}_raw', 'covg']
     )
+    df[f'{samp}_scaled'] = beta_to_m_value(df[f'{samp}_raw'], df['covg'], 0.1)
 
     # Require minimum coverage of 10 and restrict to canonical chromosomes
     df.drop(df[(df['covg'] < 10) | (~df['chr'].str.startswith('chr'))].index, inplace=True)
