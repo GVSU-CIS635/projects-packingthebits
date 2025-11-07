@@ -8,6 +8,7 @@ import A_read_config as read_config
 import B_preprocess_data as preprocess_data
 import C_descriptive_stats as descriptive_stats
 import D_dissimilarity as dissimilarity
+import E_pca as pca
 
 logger = project_logger.create_logger('main')
 
@@ -51,6 +52,7 @@ def main():
     # Do analysis and visualization portions of pipeline
     descriptive_stats.main(df)
     dissimilarity.main(df)
+    pca.main(df)
 
     print(df)
 
