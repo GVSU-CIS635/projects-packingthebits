@@ -49,12 +49,13 @@ def main():
             conf['preprocessed_file']
         )
 
+    # Setup metadata DataFrame
+    meta = pd.read_csv(conf['meta_file'], sep='\t')
+
     # Do analysis and visualization portions of pipeline
     descriptive_stats.main(df)
     dissimilarity.main(df)
-    pca.main(df)
-
-    print(df)
+    pca.main(df, meta)
 
     return None
 
