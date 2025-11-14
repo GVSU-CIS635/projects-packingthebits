@@ -116,23 +116,12 @@ def main(df, meta):
     make_plot(
         pcs,
         'Stage_full',
-        ['IA', 'IB', 'IC', 'IIA', 'IIB', 'IIC', 'III', 'IIIB', 'IIIC'],
-        ['#014636', '#016c59', '#02818a', '#3690c0', '#67a9cf', '#a6bddb', '#d0d1e6', '#ece2f0', '#fff7fb'],
+        ['IA', 'IB', 'IC', 'IIA', 'IIB', 'IIC', 'III', 'IIIA', 'IIIB', 'IIIC'],
+        ['#014636', '#016c59', '#02818a', '#3690c0', '#67a9cf', '#a6bddb', '#d0d1e6', '#d0d1e6', '#ece2f0', '#fff7fb'],
         'PCA: Stage',
         f'Prinicipal Component 1 [{var_ratio[0]:.3f}]',
         f'Prinicipal Component 2 [{var_ratio[1]:.3f}]',
         'pca_stage.pdf',
-    )
-
-    make_plot(
-        pcs,
-        'batch_methylation',
-        ['a', 'b', 'b2', 'c'],
-        ['red', 'blue', 'green', 'brown'],
-        'PCA: Sequencing Batch',
-        f'Prinicipal Component 1 [{var_ratio[0]:.3f}]',
-        f'Prinicipal Component 2 [{var_ratio[1]:.3f}]',
-        'pca_batch.pdf',
     )
 
     return None
