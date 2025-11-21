@@ -97,7 +97,7 @@ def main(df):
     mat = calculate_dissimilarity_matrix(df_sorted)
 
     logger.info('Plotting dissimilarity matrix')
-    plot_dissimilarity(mat, df_sorted.columns)
+    plot_dissimilarity(mat, [x.replace('_raw', '') for x in df_sorted.columns])
 
     return None
 
