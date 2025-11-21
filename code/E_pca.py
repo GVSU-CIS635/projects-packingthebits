@@ -95,7 +95,7 @@ def main(df, meta):
         pcs,
         'cellType', # type of cell
         ['stromal', 'epithelial'],
-        ['red', 'blue'],
+        ['#e41a1c', '#377eb8'],
         'PCA: Cell Type',
         f'Prinicipal Component 1 [{var_ratio[0]:.3f}]',
         f'Prinicipal Component 2 [{var_ratio[1]:.3f}]',
