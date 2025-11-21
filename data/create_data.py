@@ -51,7 +51,7 @@ def run_simulation(cpgs):
 
     return df
 
-def create_metadata(n):
+def create_metadata(n, cell_types):
     """Create a mock metadata sheet for the example data"""
     # Columns that are needed for metadata
     data = {
@@ -92,15 +92,16 @@ def create_metadata(n):
     stage_choices = ['I', 'II', 'III']
 
     for samp in samples:
-        data['WGBS_ID'].append(f'{samp:>02}aS')
+        cell_type = cell_types[samp]
+        data['WGBS_ID'].append(f'{samp:>02}a{cell_type}')
         data['tumor_id'].append(f'{samp}')
         data['cluster'].append('S{}'.format(random.randint(1, 4)))
         data['matched_epi_str'].append('none')
-        data['sample'].append(f'{samp:>02}aS')
+        data['sample'].append(f'{samp:>02}a{cell_type}')
         data['age'].append(random.randrange(40000, 75000) / 10000)
         data['os_years'].append(random.randrange(500, 25000) / 10000)
         data['xtic'].append(random.choice(xtic_choices))
-        data['cellType'].append('stromal')
+        data['cellType'].append('stromal' if cell_type == 'S' else 'epithelial')
         data['histotype'].append(random.choice(histo_choices))
 
         site = random.choice(site_choices)
@@ -147,13 +148,16 @@ def main():
     N = 12
 
     # Simulate samples
+    cell_types = []
     for n in range(N):
         df = run_simulation(cpgs)
+        cell_type = random.choice(['S', 'E'])
+        cell_types.append(cell_type)
 
-        df.to_csv(f'{n:>02}aS_mergecg.bed.gz', sep='\t', index=False, header=False)
+        df.to_csv(f'{n:>02}a{cell_type}_mergecg.bed.gz', sep='\t', index=False, header=False)
 
     # Create metadata
-    meta = create_metadata(N)
+    meta = create_metadata(N, cell_types)
     meta.to_csv('metadata.tsv', sep='\t', index=False)
 
 if __name__ == '__main__':
