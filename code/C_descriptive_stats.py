@@ -64,10 +64,10 @@ def main(df):
 
 if __name__ == '__main__':
     fname = 'example_data.tsv'
-    logger.info(f'Reading preprocessed data file: {fname}')
-    df = pd.read_csv(fname, sep='\t', index_col=['chr', 'start'])
 
     if os.path.exists(fname):
+        logger.info(f'Reading preprocessed data file: {fname}')
+        df = pd.read_csv(fname, sep='\t', index_col=['chr', 'start'])
         main(df)
     else:
         logger.error('B_preprocess_data.py has not been run. Run and try again!')

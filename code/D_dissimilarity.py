@@ -10,19 +10,13 @@ logger = project_logger.create_logger('dissimilarity')
 
 def euclidean_norm(v):
     """Calculate Euclidean norm of a vector"""
-    total = 0
-    for x_i in v:
-        total += x_i*x_i
+    total = sum(x_i*x_i for x_i in v)
 
     return np.sqrt(total)
 
 def dot_product(x, y):
     """Calculate dot product between two vectors"""
-    total = 0
-    for x_i, y_i in zip(x, y):
-        total += x_i*y_i
-
-    return total
+    return sum(x_i*y_i for x_i, y_i in zip(x, y))
 
 def cosine_similarity(x, y):
     """Calculate cosine similarity between two vectors"""
@@ -42,8 +36,10 @@ def calculate_dissimilarity_matrix(df):
         row = []
         for j in range(len(t_df)):
             if j > i:
+                # Only calculate one triangular portion of matrix
                 row.append(np.nan)
             elif j == i:
+                # Shortcut value for on-diagonal of matrix
                 row.append(0.0)
             else:
                 dis = 1 - cosine_similarity(t_df.iloc[i], t_df.iloc[j])
@@ -105,10 +101,10 @@ def main(df):
 
 if __name__ == '__main__':
     fname = 'example_data.tsv'
-    logger.info(f'Reading preprocessed data file: {fname}')
-    df = pd.read_csv(fname, sep='\t', index_col=['chr', 'start'])
 
     if os.path.exists(fname):
+        logger.info(f'Reading preprocessed data file: {fname}')
+        df = pd.read_csv(fname, sep='\t', index_col=['chr', 'start'])
         main(df)
     else:
         logger.error('B_preprocess_data.py has not been run. Run and try again!')
