@@ -5,10 +5,12 @@ or through the `main.py` entrypoint. The following dependencies are needed to ru
 
 | Dependency | Version |
 |:-----------|:-------:|
-| Python     | 3.14    |
-| Pandas     | 2.3.3   |
-| Numpy      | 2.3.3   |
-| Matplotlib | 3.10.6  |
+| python     | 3.14    |
+| pandas     | 2.3.3   |
+| numpy      | 2.3.3   |
+| matplotlib | 3.10.6  |
+| sklearn    | 1.7.2   |
+| scipy      | 1.16.3  |
 
 To simplify the process of retrieving the dependencies, an `environment.yml` file has been provided for use with `conda`
 or similar package management systems (`mamba`, `pixi`, etc.). An example of setting up with `conda` is:
@@ -24,12 +26,13 @@ Once the environment has been activated, you are ready to run the project.
 
 - `code`: Contains code for running the project
 - `documents`: Proposal, progress report, and final report as submitted on Blackboard.
-- `data`: Contains example data for running the project. The data submitted within the report are protected data, and
-cannot be shared at this time.
+- `data`: Contains example data for running the project. The real data submitted within the report are protected data,
+and cannot be shared at this time. *Note, this data must be created by the user prior to running. See below for
+instructions for building.*
 
 # Example Data
 
-Example data can be downloaded from GitHub (INCLUDE LINK HERE ONCE GENERATED). It can also be created by the user via:
+Example data can be created by the user via:
 
 ```
 # Start from the top level project directory
@@ -60,7 +63,39 @@ python main.py --config your_config.toml
 
 ## Running Individual Components
 
-Coming soon!
+Each component in the pipeline is set up to run individually via `python filename.py`. Please be aware that it only runs
+with the example dataset, so make sure to create the example data files prior to running individually.
+
+### Configuration File
+
+- **Filename:** `A_read_config.py`
+- **Description:** Reads the input configuration TOML file.
+
+### Data Preprocessing
+
+- **Filename:** `B_preprocess_data.py`
+- **Description:** Reads data and performs any preprocessing. Relevant processing performed includes: calculating
+scaled values using `StandardScaler` for use in PCA (all data used prior to filtering), filtering for low coverage data
+points, removing non-canonical chromosomes, and limiting to only data points found in all samples to avoid missing data.
+
+### Descriptive Statistics
+
+- **Filename:** `C_descriptive_stats.py`
+- **Description:** Creates two plots with descriptive statistics about the data. One plot shows the distribution of CpG
+methylation levels across each sample via a boxplot. The other plot shows the mean CpG methylation level for the two
+cell types (epithelial and stromal) found in the dataset.
+
+### Dissimilarity Matrix
+
+- **Filename:** `D_dissimilarity.py`
+- **Description:** Calculates and plots the dissimilarity matrix across samples for the 10,000 most variable CpGs in
+terms of the methylation level variance.
+
+### Principal Component Analysis
+
+- **Filename:** `E_pca.py`
+- **Description:** Calculates the PCA for the scaled data and generates plots for a select set of metadata to try and
+determine the feature driving primary separation along PC1 and PC2.
 
 --------------------------------------------------------------------
 # Original README
