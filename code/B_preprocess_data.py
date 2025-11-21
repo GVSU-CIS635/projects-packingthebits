@@ -1,5 +1,4 @@
 from multiprocessing import Pool
-import gzip
 import glob
 import os
 
@@ -18,6 +17,7 @@ def get_sample_name(fname):
 
 def beta_to_m_value(betas, covgs, k):
     """Turn CpG beta value into M-value using logit transform"""
+    # Easier to retrieve values from lists than from pd.Series
     b = list(betas)
     c = list(covgs)
 
@@ -49,7 +49,7 @@ def read_file(fname):
     # Require minimum coverage of 10 and restrict to canonical chromosomes
     df.drop(df[(df['covg'] < 10) | (~df['chr'].str.startswith('chr'))].index, inplace=True)
 
-    # Only need coverage column to do filter, drop so we don't carry it around during analysis
+    # Only needed coverage column to do filter, drop so we don't carry it around during analysis
     df.drop(columns='covg', inplace=True)
 
     # Set index levels
@@ -57,48 +57,15 @@ def read_file(fname):
 
     return df
 
-def read_metadata(fname):
+def get_samples_from_metadata(fname):
     """Read metadata TSV file"""
-    logger.info(f'Reading metadata file: {fname}')
-
-    df = pd.read_csv(
-        fname,
-        sep='\t',
-        usecols=[
-            'WGBS_ID',
-            'tumor_id',
-            'cluster',
-            'matched_epi_str',
-            'sample',
-            'age',
-            'os_years',
-            'xtic',
-            'cellType',
-            'histotype',
-            'anatomic_site',
-            'site',
-            'Stage',
-            'Stage_full',
-            'Grade',
-            'MillionReadsMapped_Methylation',
-            'CpA.Retention',
-            'CpC.Retention',
-            'CpG.Retention',
-            'CpT.Retention',
-            'cpgi.beta',
-            'solo.wcgw.beta',
-            'gene.counts',
-            'MIR200cAvgBeta',
-            'MIR200CHG',
-        ]
-    )
-
-    return df
+    logger.info(f'Getting samples from metadata file: {fname}')
+    return pd.read_csv(fname, sep='\t', usecols=['WGBS_ID'])
 
 def process_files(dir, n_processes, meta_name):
     """Pull out files in directory and process them in parallel"""
     # Metadata (defines which samples we want to keep)
-    meta = read_metadata(meta_name)
+    meta = get_samples_from_metadata(meta_name)
 
     # Not the most efficient way to do this, but it gets the job done
     files = []
