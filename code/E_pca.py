@@ -79,6 +79,7 @@ def main(df, meta):
     pcs = pcs.merge(meta, left_on='samp', right_on='WGBS_ID')
 
     # Create plots
+    logger.info('Creating PCA plots')
     make_plot(
         pcs,
         'cluster', # stromal compartment cluster
