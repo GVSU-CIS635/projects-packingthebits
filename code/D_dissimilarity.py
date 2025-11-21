@@ -58,14 +58,16 @@ def plot_dissimilarity(mat, labels):
 
     cbar = fig.colorbar(hm)
 
-    ax.set_xticks(np.arange(len(labels)) + 0.5, labels, minor=False, rotation=45)
-    ax.set_yticks(np.arange(len(labels)) + 0.5, labels, minor=False)
+    fontsize = 10 if len(mat) <= 10 else 6
+
+    ax.set_xticks(np.arange(len(labels)) + 0.5, labels, minor=False, rotation=90, fontsize=fontsize)
+    ax.set_yticks(np.arange(len(labels)) + 0.5, labels, minor=False, fontsize=fontsize)
 
     ax.invert_yaxis()
     ax.xaxis.tick_top()
 
     # Only add text if the dimension isn't too high
-    if len(mat) < 10:
+    if len(mat) <= 10:
         for i in range(len(mat)):
             for j in range(len(mat)):
                 text = ax.text(j+0.5, i+0.5, mat[i][j], ha='center', va='center', color='w')
