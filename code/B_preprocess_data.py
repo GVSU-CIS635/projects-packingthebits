@@ -2,7 +2,6 @@ from multiprocessing import Pool
 import glob
 import os
 
-from sklearn.preprocessing import StandardScaler
 from scipy.special import logit
 import pandas as pd
 
