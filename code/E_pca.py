@@ -4,7 +4,6 @@ import os
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import pandas as pd
-import numpy as np
 
 import project_logger
 
@@ -82,7 +81,7 @@ def main(df, meta):
     # Create plots
     make_plot(
         pcs,
-        'cluster',
+        'cluster', # stromal compartment cluster
         ['S1', 'S2', 'S3', 'S4'],
         ['red', 'blue', 'green', 'brown'],
         'PCA: Stromal Cluster',
@@ -93,7 +92,7 @@ def main(df, meta):
 
     make_plot(
         pcs,
-        'cellType',
+        'cellType', # type of cell
         ['stromal', 'epithelial'],
         ['red', 'blue'],
         'PCA: Cell Type',
@@ -104,10 +103,10 @@ def main(df, meta):
 
     make_plot(
         pcs,
-        'histotype',
+        'histotype', # type of ovarian cancer
         ['ENOC', 'CCOC', 'HGSC'],
         ['red', 'blue', 'brown'],
-        'PCA: Histoype',
+        'PCA: Histotype',
         f'Prinicipal Component 1 [{var_ratio[0]:.3f}]',
         f'Prinicipal Component 2 [{var_ratio[1]:.3f}]',
         'pca_histotype.pdf',
@@ -115,7 +114,7 @@ def main(df, meta):
 
     make_plot(
         pcs,
-        'Stage_full',
+        'Stage_full', # cancer stage
         ['IA', 'IB', 'IC', 'IIA', 'IIB', 'IIC', 'III', 'IIIA', 'IIIB', 'IIIC'],
         ['#014636', '#016c59', '#02818a', '#3690c0', '#67a9cf', '#a6bddb', '#d0d1e6', '#d0d1e6', '#ece2f0', '#fff7fb'],
         'PCA: Stage',
@@ -127,15 +126,14 @@ def main(df, meta):
     return None
 
 if __name__ == '__main__':
-    df_name = 'example_data.tsv'
-    logger.info(f'Reading preprocessed data file: {df_name}')
-    df = pd.read_csv(df_name, sep='\t', index_col=['chr', 'start'])
-
     meta_name = '../data/metadata.tsv'
     logger.info(f'Reading metadata file: {meta_name}')
     meta = pd.read_csv(meta_name, sep='\t')
 
+    df_name = 'example_data.tsv'
     if os.path.exists(df_name):
+        logger.info(f'Reading preprocessed data file: {df_name}')
+        df = pd.read_csv(df_name, sep='\t', index_col=['chr', 'start'])
         main(df, meta)
     else:
         logger.error('B_preprocess_data.py has not been run. Run and try again!')
