@@ -79,6 +79,7 @@ def process_files(dir, n_processes, meta_name):
         dfs = pool.map(read_file, files)
 
     # To address missing data, use only data that is included in all samples
+    logger.info('Merging individual DataFrames')
     df = dfs[0].join(dfs[1:], how='inner')
 
     return df
