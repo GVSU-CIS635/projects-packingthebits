@@ -23,6 +23,24 @@ def parse_args():
 
     return parser.parse_args()
 
+def get_data(conf):
+    """Read preprocessed TSV if available, otherwise create"""
+    if os.path.exists(conf['preprocessed_file']):
+        logger.info(f'Using existing preprocessed file: {conf["preprocessed_file"]}')
+        return pd.read_csv(
+            conf['preprocessed_file'],
+            sep='\t',
+            index_col=['chr', 'start']
+        )
+
+    logger.info('Cannot determine if data has been preprocessed - preprocessing now')
+    return preprocess_data.main(
+        conf['data_dir'],
+        conf['n_processes'],
+        conf['meta_file'],
+        conf['preprocessed_file']
+    )
+
 def main():
     """Main entry point for program"""
     # Parse command line arguments
@@ -32,22 +50,7 @@ def main():
     conf = read_config.read_config(args.config)
 
     # Read and preprocess data
-    df = None
-    if len(conf['preprocessed_file']) > 0 and os.path.exists(conf['preprocessed_file']):
-        logger.info(f'Using existing preprocessed file: {conf["preprocessed_file"]}')
-        df = pd.read_csv(
-            conf['preprocessed_file'],
-            sep='\t',
-            index_col=['chr', 'start']
-        )
-    else:
-        logger.info('Cannot determine if data has been preprocessed - preprocessing now')
-        df = preprocess_data.main(
-            conf['data_dir'],
-            conf['n_processes'],
-            conf['meta_file'],
-            conf['preprocessed_file']
-        )
+    df = get_data(conf)
 
     # Setup metadata DataFrame
     meta = pd.read_csv(conf['meta_file'], sep='\t')
