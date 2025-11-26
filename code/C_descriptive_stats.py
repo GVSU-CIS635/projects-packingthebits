@@ -24,9 +24,14 @@ def by_sample(df):
 
     fontsize = 10 if len(df.columns) <= 10 else 6
 
-    plt.xticks(ticks=range(1,len(df.columns)+1), labels=df.columns, rotation=90, fontsize=fontsize)
+    plt.xticks(
+        ticks=range(1,len(df.columns)+1),
+        labels=[x.replace('_raw', '') for x in df.columns],
+        rotation=90,
+        fontsize=fontsize
+    )
 
-    plt.savefig('stats_by_sample.pdf', bbox_inches='tight')
+    plt.savefig('stats_by_sample.png', bbox_inches='tight')
     plt.close('all')
 
     return None

@@ -3,3 +3,4 @@ code/my_data.toml
 */*.bed.gz
 */*.tsv
 code/*.pdf
+code/*.png
