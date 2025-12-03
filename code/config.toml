@@ -1,0 +1,13 @@
+# Location of BED files
+data_dir = "../data"
+
+# Location of BED files
+meta_file = "../data/metadata.tsv"
+
+# Number of processes to use in multiprocessing
+n_processes = 1
+
+# TSV file to save (and read) preprocessed data from
+# Saves time when rerunning pipeline
+# "" => will not read/write preprocessed file
+preprocessed_file = "example_data.tsv"
